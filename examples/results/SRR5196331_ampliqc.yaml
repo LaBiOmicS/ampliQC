@@ -32634,19 +32634,7 @@ context_evaluation:
         fwd_matches: 0
         rev_matches: 30087
         orientation_str: 0.0% Forward / 100.0% Reverse
-      - primer_name: Arch519F (Archaeal 16S V3-V4)
-        sequence: CAGCMGCCGCGGTAA
-        match_pct: 95.2
-        fwd_matches: 29259
-        rev_matches: 0
-        orientation_str: 100.0% Forward / 0.0% Reverse
       - primer_name: 515F (16S V4)
-        sequence: GTGYCAGCMGCCGCGGTAA
-        match_pct: 94.7
-        fwd_matches: 29103
-        rev_matches: 0
-        orientation_str: 100.0% Forward / 0.0% Reverse
-      - primer_name: 515F-Y (16S V4 Parada)
         sequence: GTGYCAGCMGCCGCGGTAA
         match_pct: 94.7
         fwd_matches: 29103
@@ -32691,7 +32679,7 @@ context_evaluation:
     context_type: Amplicon Sequencing (Short-Read)
     target_region: 16S rRNA (V3-V4 region)
     detected_primers: *id002
-    primary_primer: 341F (16S V3-V4) [CCTACGGGNGGCWGCAG] (98.0% match)
+    primary_primer: 'Fwd: 341F (16S V3-V4) (98.0%) | Rev: 338R (16S V1-V2) (97.9%)'
     trimming_status: UNTRIMMED (Trimming Required)
     recommended_pipeline: "Cutadapt (Primer Trimming) \u2794 DADA2 / Deblur (ASV Clustering)\
       \ \u2794 QIIME 2 / SILVA / UNITE"

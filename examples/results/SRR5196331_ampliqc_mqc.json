@@ -15,7 +15,7 @@
       "Duplication Rate (%)": 55.22,
       "Overall Status": "WARN",
       "Target Region": "16S rRNA (V3-V4 region)",
-      "Primary Primer": "341F (16S V3-V4) [CCTACGGGNGGCWGCAG] (98.0% match)",
+      "Primary Primer": "Fwd: 341F (16S V3-V4) (98.0%) | Rev: 338R (16S V1-V2) (97.9%)",
       "Trimming Status": "UNTRIMMED (Trimming Required)"
     }
   }
