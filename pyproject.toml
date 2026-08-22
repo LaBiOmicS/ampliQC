@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ampliqc"
+version = "0.1.0"
+description = "ampliQC: Context-aware Quality Control (QC) engine specialized for Amplicon sequencing data (16S, 18S, ITS, functional amplicons - Short & Long Reads)"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Fabiano Menegidio", email = "labiomics@bioinformatica.com.br" }
+]
+maintainers = [
+    { name = "Fabiano Menegidio", email = "labiomics@bioinformatica.com.br" }
+]
+requires-python = ">=3.9"
+keywords = [
+    "amplicon",
+    "ampliQC",
+    "quality-control",
+    "QC",
+    "16S",
+    "18S",
+    "ITS",
+    "microbiome",
+    "metabarcoding",
+    "DADA2",
+    "Cutadapt",
+    "Illumina",
+    "Nanopore",
+    "PacBio",
+    "bioinformatics"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "dnaio>=1.2.0",
+    "xopen>=2.0.0",
+    "pyfastx>=2.3.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "jinja2>=3.1.0",
+    "click>=8.0.0",
+    "pyyaml>=6.0",
+    "rich>=13.0.0",
+    "plotly>=5.14.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov",
+    "black",
+    "flake8",
+    "mypy",
+    "build",
+    "twine"
+]
+
+[project.urls]
+Homepage = "https://github.com/LaBiOmicS/ampliQC"
+Documentation = "https://github.com/LaBiOmicS/ampliQC#readme"
+Repository = "https://github.com/LaBiOmicS/ampliQC.git"
+Issues = "https://github.com/LaBiOmicS/ampliQC/issues"
+
+[project.scripts]
+ampliqc = "ampliqc.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-v"
