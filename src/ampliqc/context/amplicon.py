@@ -168,7 +168,7 @@ class AmpliconContextAnalyzer(ContextAnalyzer):
         detected_primers = scan_primers(
             sequences=sequences,
             custom_primers=self.custom_primers,
-            search_window=200 if self.is_long_read else 150,
+            search_window=100 if self.is_long_read else 50,
             min_pct=1.0,
         )
 

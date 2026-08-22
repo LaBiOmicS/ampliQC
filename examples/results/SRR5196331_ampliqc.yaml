@@ -32634,18 +32634,6 @@ context_evaluation:
         fwd_matches: 0
         rev_matches: 30087
         orientation_str: 0.0% Forward / 100.0% Reverse
-      - primer_name: 515F (16S V4)
-        sequence: GTGYCAGCMGCCGCGGTAA
-        match_pct: 94.7
-        fwd_matches: 29103
-        rev_matches: 0
-        orientation_str: 100.0% Forward / 0.0% Reverse
-      - primer_name: 534R (16S V1-V3)
-        sequence: ATTACCGCGGCTGCTGG
-        match_pct: 94.4
-        fwd_matches: 0
-        rev_matches: 29009
-        orientation_str: 0.0% Forward / 100.0% Reverse
     context_reasoning: Untrimmed primers remaining in amplicon reads can distort downstream
       OTU/ASV feature table generation (e.g. DADA2 / Deblur). Recommend running primer
       trimming (e.g. Cutadapt) before ASV clustering.

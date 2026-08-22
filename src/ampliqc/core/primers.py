@@ -179,13 +179,13 @@ def scan_primers(
     sequences: List[str],
     custom_primers: Optional[List[str]] = None,
     custom_db_path: Optional[str] = None,
-    search_window: int = 150,
+    search_window: int = 50,
     min_pct: float = 1.0,
     max_mismatches: int = 1,
 ) -> List[Dict[str, Any]]:
     """
     Scans sequence sample for all known and custom primers/adapters.
-    Inspects 5' head and 3' tail within search_window (bp).
+    Inspects 5' head and 3' tail within search_window (bp) to detect true terminal primers.
     Supports forward, reverse complement, degenerate IUPAC codes, and mismatch tolerance.
     """
     if not sequences:
@@ -241,26 +241,28 @@ def scan_primers(
                 "orientation_str": f"{fwd_pct}% Forward / {rev_pct}% Reverse",
             })
 
-    # Sort descending by match percentage
-    detected_primers.sort(key=lambda x: x["match_pct"], reverse=True)
-
-    # Deduplicate: Filter out redundant sub-primers (shorter sequences contained in longer detected primers)
-    filtered_primers = []
+    # 1. Deduplicate exact identical sequences (e.g. 515F vs 515F-Y)
+    unique_by_seq: Dict[str, Dict[str, Any]] = {}
     for p in detected_primers:
+        seq = p["sequence"]
+        if seq not in unique_by_seq:
+            unique_by_seq[seq] = p
+        else:
+            if p["match_pct"] > unique_by_seq[seq]["match_pct"]:
+                unique_by_seq[seq] = p
+
+    uniques = list(unique_by_seq.values())
+    uniques.sort(key=lambda x: x["match_pct"], reverse=True)
+
+    # 2. Filter out shorter sub-string primers when a longer parent primer is detected
+    filtered_primers = []
+    for p in uniques:
         is_sub = False
-        for other in detected_primers:
+        for other in uniques:
             if p["primer_name"] != other["primer_name"]:
-                # Exact identical sequence match: keep the one with higher match_pct or first encountered
-                if p["sequence"] == other["sequence"]:
-                    if p["match_pct"] < other["match_pct"]:
-                        is_sub = True
-                        break
-                    elif p["match_pct"] == other["match_pct"] and detected_primers.index(p) > detected_primers.index(other):
-                        is_sub = True
-                        break
-                # Substring match: filter shorter sub-primer if match percentage is similar (within 10%)
-                elif p["sequence"] in other["sequence"] and len(p["sequence"]) < len(other["sequence"]):
-                    if p["match_pct"] <= other["match_pct"] + 10.0:
+                # If p is shorter and its sequence is contained in other's sequence
+                if p["sequence"] in other["sequence"] and len(p["sequence"]) < len(other["sequence"]):
+                    if other["match_pct"] >= 50.0 or p["match_pct"] <= other["match_pct"] + 15.0:
                         is_sub = True
                         break
         if not is_sub:

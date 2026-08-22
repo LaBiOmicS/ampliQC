@@ -7,7 +7,7 @@ repo_url: https://github.com/LaBiOmicS/ampliQC
 repo_name: LaBiOmicS/ampliQC
 
 docs_dir: docs_src
-site_dir: site
+site_dir: docs_build
 
 theme:
   name: material
@@ -15,15 +15,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: cyan
+      primary: green
+      accent: teal
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: cyan
+      primary: green
+      accent: teal
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -71,12 +71,12 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - Quick Start: quickstart.md
-  - Biological Context & Rules: context.md
-  - CLI Reference: cli.md
-  - Reports & Deliverables: reports.md
   - Python API Reference:
       - API Overview: api/index.md
       - AmpliconContextAnalyzer: api/context.md
       - FastqStatsAccumulator: api/stats.md
       - PrimerScanner: api/primers.md
       - Exporters & Reports: api/reports.md
+  - CLI Reference: cli.md
+  - Biological Context & Rules: context.md
+  - Reports & Deliverables: reports.md
