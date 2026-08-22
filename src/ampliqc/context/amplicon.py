@@ -78,10 +78,25 @@ class AmpliconContextAnalyzer(ContextAnalyzer):
         primary_primer_str = "None detected (Already trimmed or clean)"
 
         if detected_primers:
-            top_primer = max(detected_primers, key=lambda x: x["match_pct"])
-            primary_primer_str = f"{top_primer['primer_name']} [{top_primer['sequence']}] ({top_primer['match_pct']}% match)"
+            fwd_primers = [p for p in detected_primers if "F" in p["primer_name"] or "Fwd" in p["primer_name"]]
+            rev_primers = [p for p in detected_primers if "R" in p["primer_name"] or "Rev" in p["primer_name"]]
+
+            top_fwd = max(fwd_primers, key=lambda x: x["match_pct"]) if fwd_primers else None
+            top_rev = max(rev_primers, key=lambda x: x["match_pct"]) if rev_primers else None
+
+            if top_fwd and top_rev:
+                primary_primer_str = f"Fwd: {top_fwd['primer_name']} ({top_fwd['match_pct']}%) | Rev: {top_rev['primer_name']} ({top_rev['match_pct']}%)"
+                primary = top_fwd
+            elif top_fwd:
+                primary_primer_str = f"Fwd: {top_fwd['primer_name']} [{top_fwd['sequence']}] ({top_fwd['match_pct']}% match)"
+                primary = top_fwd
+            else:
+                top_primer = max(detected_primers, key=lambda x: x["match_pct"])
+                primary_primer_str = f"{top_primer['primer_name']} [{top_primer['sequence']}] ({top_primer['match_pct']}% match)"
+                primary = top_primer
+
             for p_code, r_name in PRIMER_REGION_MAP.items():
-                if p_code in top_primer["primer_name"]:
+                if p_code in primary["primer_name"]:
                     inferred_region = r_name
                     break
 

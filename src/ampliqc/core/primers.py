@@ -243,7 +243,30 @@ def scan_primers(
 
     # Sort descending by match percentage
     detected_primers.sort(key=lambda x: x["match_pct"], reverse=True)
-    return detected_primers
+
+    # Deduplicate: Filter out redundant sub-primers (shorter sequences contained in longer detected primers)
+    filtered_primers = []
+    for p in detected_primers:
+        is_sub = False
+        for other in detected_primers:
+            if p["primer_name"] != other["primer_name"]:
+                # Exact identical sequence match: keep the one with higher match_pct or first encountered
+                if p["sequence"] == other["sequence"]:
+                    if p["match_pct"] < other["match_pct"]:
+                        is_sub = True
+                        break
+                    elif p["match_pct"] == other["match_pct"] and detected_primers.index(p) > detected_primers.index(other):
+                        is_sub = True
+                        break
+                # Substring match: filter shorter sub-primer if match percentage is similar (within 10%)
+                elif p["sequence"] in other["sequence"] and len(p["sequence"]) < len(other["sequence"]):
+                    if p["match_pct"] <= other["match_pct"] + 10.0:
+                        is_sub = True
+                        break
+        if not is_sub:
+            filtered_primers.append(p)
+
+    return filtered_primers
 
 
 def detect_primer_dimers(sequences: List[str], max_dimer_len: int = 70) -> Dict[str, Any]:
