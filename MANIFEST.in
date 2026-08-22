@@ -4,4 +4,5 @@ include CONTRIBUTING.md
 include pyproject.toml
 recursive-include src/ampliqc *.py *.j2
 recursive-include tests *.py
-recursive-include examples *.fastq *.gz
+recursive-include examples *
+
