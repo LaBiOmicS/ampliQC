@@ -179,14 +179,15 @@ def scan_primers(
     sequences: List[str],
     custom_primers: Optional[List[str]] = None,
     custom_db_path: Optional[str] = None,
-    search_window: int = 50,
+    search_window: int = 80,
+    max_offset: int = 25,
     min_pct: float = 1.0,
-    max_mismatches: int = 1,
 ) -> List[Dict[str, Any]]:
     """
     Scans sequence sample for all known and custom primers/adapters.
-    Inspects 5' head and 3' tail within search_window (bp) to detect true terminal primers.
-    Supports forward, reverse complement, degenerate IUPAC codes, and mismatch tolerance.
+    Inspects 5' head and 3' tail within search_window (bp) requiring positional terminal anchoring
+    (start position <= max_offset at 5' end or end position <= max_offset from 3' end).
+    This strictly isolates untrimmed PCR primers attached at read extremities and eliminates false positive internal hits.
     """
     if not sequences:
         return []
@@ -221,9 +222,20 @@ def scan_primers(
             head = s[:search_window]
             tail = s[-search_window:] if len(s) >= search_window else s
 
-            if pattern.search(head) or pattern.search(tail):
+            m_head = pattern.search(head)
+            m_rc_head = rc_pattern.search(head)
+            m_tail = pattern.search(tail)
+            m_rc_tail = rc_pattern.search(tail)
+
+            # Check 5' head terminal match (positional anchor check <= max_offset)
+            if m_head and m_head.start() <= max_offset:
                 fwd_matches += 1
-            elif rc_pattern.search(head) or rc_pattern.search(tail):
+            elif m_rc_head and m_rc_head.start() <= max_offset:
+                rev_matches += 1
+            # Check 3' tail terminal match (positional anchor check <= max_offset)
+            elif m_tail and (len(tail) - m_tail.end()) <= max_offset:
+                fwd_matches += 1
+            elif m_rc_tail and (len(tail) - m_rc_tail.end()) <= max_offset:
                 rev_matches += 1
 
         total_matches = fwd_matches + rev_matches
@@ -244,12 +256,12 @@ def scan_primers(
     # 1. Deduplicate exact identical sequences (e.g. 515F vs 515F-Y)
     unique_by_seq: Dict[str, Dict[str, Any]] = {}
     for p in detected_primers:
-        seq = p["sequence"]
-        if seq not in unique_by_seq:
-            unique_by_seq[seq] = p
+        seq_str = p["sequence"]
+        if seq_str not in unique_by_seq:
+            unique_by_seq[seq_str] = p
         else:
-            if p["match_pct"] > unique_by_seq[seq]["match_pct"]:
-                unique_by_seq[seq] = p
+            if p["match_pct"] > unique_by_seq[seq_str]["match_pct"]:
+                unique_by_seq[seq_str] = p
 
     uniques = list(unique_by_seq.values())
     uniques.sort(key=lambda x: x["match_pct"], reverse=True)
