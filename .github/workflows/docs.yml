@@ -1,4 +1,4 @@
-name: Deploy MkDocs Documentation
+name: Deploy GitHub Pages
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -22,20 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install documentation dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install mkdocs-material mkdocstrings[python] .
-
-      - name: Build MkDocs Site to docs/
-        run: |
-          PYTHONPATH=src mkdocs build --site-dir docs
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
