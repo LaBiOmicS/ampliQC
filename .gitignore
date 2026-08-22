@@ -48,4 +48,7 @@ test_output*/
 ampliqc_results*/
 ampliqc_batch_results*/
 ampliqc_*_results/
+site/
+docs_build/
+
 

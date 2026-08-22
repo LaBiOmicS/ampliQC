@@ -1,47 +1,82 @@
 site_name: ampliQC Documentation
 site_description: Context-aware Quality Control engine for Amplicon sequencing data (Short & Long Reads)
 site_author: Fabiano Menegidio
-site_url: https://labiomics.github.io/ampliQC/
+site_url: https://LaBiOmicS.github.io/ampliQC/
 
-repo_name: LaBiOmicS/ampliQC
 repo_url: https://github.com/LaBiOmicS/ampliQC
+repo_name: LaBiOmicS/ampliQC
+
+docs_dir: docs_src
+site_dir: site
 
 theme:
   name: material
+  language: en
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
       accent: cyan
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: indigo
       accent: cyan
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.expand
-    - navigation.indexes
+    - navigation.tabs
+    - navigation.sections
     - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
     - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: true
+            show_category_heading: true
+            group_by_category: true
+            heading_level: 2
 
 markdown_extensions:
   - admonition
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
+  - pymdownx.details
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
   - tables
 
 nav:
-  - Home: index.md
+  - Overview: index.md
   - Quick Start: quickstart.md
-  - Usage Guide: usage.md
-  - API Reference: api.md
+  - Biological Context & Rules: context.md
+  - CLI Reference: cli.md
+  - Reports & Deliverables: reports.md
+  - Python API Reference:
+      - API Overview: api/index.md
+      - AmpliconContextAnalyzer: api/context.md
+      - FastqStatsAccumulator: api/stats.md
+      - PrimerScanner: api/primers.md
+      - Exporters & Reports: api/reports.md
