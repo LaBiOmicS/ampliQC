@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ampliQC — Context-Aware Amplicon Quality Control Engine</title>
-  <meta name="description" content="Context-aware Quality Control (QC) engine specialized for Amplicon Sequencing Data (16S, 18S, ITS, and functional marker genes) across Short & Long Reads developed by LaBiOmicS UMC." />
+  <title>ampliQC — High-Performance & Context-Aware Amplicon Quality Control Engine</title>
+  <meta name="description" content="Next-Generation Context-Aware Quality Control (QC) Engine specialized for Amplicon Sequencing Data (16S, 18S, ITS, and functional marker genes) across Short & Long Reads developed by LaBiOmicS UMC." />
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,18 +15,18 @@
         extend: {
           colors: {
             brand: {
-              50: '#eef2ff',
-              400: '#818cf8',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-              900: '#312e81',
-              950: '#1e1b4b',
+              50: '#f0fdf4',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+              950: '#052e16',
             },
             accent: {
-              400: '#38bdf8',
-              500: '#06b6d4',
-              600: '#0891b2',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
             }
           }
         }
@@ -46,7 +46,7 @@
     body { font-family: 'Inter', sans-serif; }
     code, pre { font-family: 'Fira Code', monospace; }
     .hero-gradient {
-      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, rgba(15, 23, 42, 0.98) 70%);
+      background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, rgba(15, 23, 42, 0.98) 70%);
     }
     .glass-card {
       background: rgba(30, 41, 59, 0.6);
@@ -54,13 +54,13 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .glass-card:hover {
-      border-color: rgba(129, 140, 248, 0.3);
-      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.15);
+      border-color: rgba(34, 197, 94, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(34, 197, 94, 0.15);
     }
     .tab-active {
-      border-color: #6366f1 !important;
-      color: #818cf8 !important;
-      background: rgba(99, 102, 241, 0.12) !important;
+      border-color: #22c55e !important;
+      color: #4ade80 !important;
+      background: rgba(34, 197, 94, 0.12) !important;
     }
   </style>
 </head>
@@ -70,7 +70,7 @@
   <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <span class="text-xl font-black tracking-tight bg-gradient-to-r from-brand-400 via-indigo-300 to-accent-400 bg-clip-text text-transparent">
+        <span class="text-xl font-black tracking-tight bg-gradient-to-r from-brand-400 via-emerald-300 to-accent-400 bg-clip-text text-transparent">
           ampliQC 🧬
         </span>
         <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20">
@@ -81,11 +81,11 @@
       <nav class="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-300">
         <a href="#overview" class="hover:text-brand-400 transition">Overview</a>
         <a href="#institution" class="hover:text-brand-400 transition">LaBiOmicS UMC</a>
-        <a href="#problem" class="hover:text-brand-400 transition">Why ampliQC</a>
-        <a href="#architecture" class="hover:text-brand-400 transition">Architecture</a>
+        <a href="#pipeline" class="hover:text-brand-400 transition">Architecture</a>
+        <a href="#problem" class="hover:text-brand-400 transition">FastQC vs ampliQC</a>
         <a href="#features" class="hover:text-brand-400 transition">Features</a>
         <a href="#installation" class="hover:text-brand-400 transition">Installation</a>
-        <a href="#usage" class="hover:text-brand-400 transition">Usage & Examples</a>
+        <a href="#usage" class="hover:text-brand-400 transition">Usage</a>
         <a href="#citation" class="hover:text-brand-400 transition">Citation</a>
       </nav>
 
@@ -93,245 +93,199 @@
         <a href="https://pypi.org/project/ampliqc/" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition border border-slate-700">
           <i class="fab fa-python text-brand-400"></i> PyPI
         </a>
-        <a href="https://github.com/LaBiOmicS/ampliQC" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-bold rounded-lg bg-brand-600 hover:bg-brand-500 text-white transition shadow-md shadow-brand-500/20">
+        <a href="https://github.com/LaBiOmicS/ampliQC" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-bold rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-950 transition shadow-md shadow-brand-500/20">
           <i class="fab fa-github text-sm"></i> GitHub
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Main Hero Section -->
-  <section id="overview" class="relative hero-gradient py-16 lg:py-24 border-b border-slate-800/80 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <!-- Hero Section -->
+  <section id="overview" class="hero-gradient py-12 lg:py-16 relative overflow-hidden border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
       
-      <!-- Badges Row -->
-      <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
-        <a href="https://www.umc.br/" target="_blank" rel="noopener">
-          <img src="https://img.shields.io/badge/University-UMC-0D47A1.svg" alt="University: UMC" class="h-6" />
+      <!-- Badges row -->
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-slate-900/80 text-slate-300 border border-slate-700/80">
+          <i class="fas fa-flask text-brand-400 mr-1"></i> LaBiOmicS / UMC Research
+        </span>
+        <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-700/50">
+          <i class="fas fa-bullseye mr-1"></i> Context-Aware QC
+        </span>
+        <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-blue-950/60 text-blue-300 border border-blue-700/50">
+          <i class="fas fa-scissors mr-1"></i> Cutadapt & DADA2 Parameters
+        </span>
+        <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-purple-950/60 text-purple-300 border border-purple-700/50">
+          <i class="fas fa-check-double mr-1"></i> Short & Long Reads
+        </span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+        Next-Generation <span class="bg-gradient-to-r from-brand-400 via-emerald-300 to-accent-400 bg-clip-text text-transparent">Context-Aware Quality Control</span> for Amplicon Libraries
+      </h1>
+
+      <p class="max-w-4xl mx-auto text-sm sm:text-base text-slate-300 font-normal leading-relaxed">
+        <strong class="text-white">ampliQC</strong> is a high-performance bioinformatics engine for evaluating 16S, 18S, ITS, and functional marker gene sequencing data across Illumina, MGI, PacBio HiFi, and Oxford Nanopore platforms without false FastQC warnings.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a href="#installation" class="px-6 py-2.5 text-xs font-bold rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 transition shadow-lg shadow-brand-500/20 flex items-center gap-2">
+          <i class="fas fa-download"></i> Install ampliQC
         </a>
-        <a href="https://github.com/LaBiOmicS" target="_blank" rel="noopener">
-          <img src="https://img.shields.io/badge/Laboratory-LaBiOmicS-7B1FA2.svg" alt="Laboratory: LaBiOmicS" class="h-6" />
-        </a>
-        <a href="https://github.com/LaBiOmicS/ampliQC" target="_blank" rel="noopener">
-          <img src="https://img.shields.io/badge/Bioinformatics-AmpliconQC-green.svg" alt="Bioinformatics" class="h-6" />
-        </a>
-        <a href="https://pypi.org/project/ampliqc/" target="_blank" rel="noopener">
-          <img src="https://img.shields.io/badge/PyPI-v0.1.1-blue.svg" alt="PyPI Package" class="h-6" />
-        </a>
-        <a href="https://anaconda.org/bioconda/ampliqc" target="_blank" rel="noopener">
-          <img src="https://img.shields.io/badge/bioconda-v0.1.1-green.svg" alt="Bioconda" class="h-6" />
-        </a>
-        <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">
-          <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" class="h-6" />
+        <a href="#usage" class="px-6 py-2.5 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 transition border border-slate-700 flex items-center gap-2">
+          <i class="fas fa-terminal text-brand-400"></i> Usage & Code Examples
         </a>
       </div>
 
-      <!-- Title & Headline -->
-      <div class="text-center max-w-4xl mx-auto">
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-          Context-Aware Quality Control Engine for <span class="bg-gradient-to-r from-brand-400 via-indigo-300 to-accent-400 bg-clip-text text-transparent">Amplicon Sequencing</span>
-        </h1>
-        <p class="text-lg sm:text-xl text-slate-300 font-normal mb-10 leading-relaxed">
-          Specialized biological evaluation for <strong>16S, 18S, ITS, and functional marker genes</strong> across <strong>Short-Read (Illumina / MGI)</strong> and <strong>Long-Read (PacBio HiFi / Oxford Nanopore)</strong> platforms. Eliminates false-positive FastQC failures and generates ready-to-copy Cutadapt & DADA2 parameters.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-4">
-          <a href="#quickstart" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm transition shadow-lg shadow-brand-500/25 flex items-center gap-2">
-            <i class="fas fa-rocket"></i> Get Started
-          </a>
-          <a href="#problem" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition border border-slate-700 flex items-center gap-2">
-            <i class="fas fa-circle-info"></i> FastQC vs ampliQC
-          </a>
-          <a href="https://github.com/LaBiOmicS/ampliQC" target="_blank" rel="noopener" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold text-sm transition border border-slate-800 flex items-center gap-2">
-            <i class="fab fa-github"></i> View Source
-          </a>
-        </div>
+      <!-- Quick Command Pill -->
+      <div class="mt-4 inline-flex items-center gap-2 bg-slate-900/90 border border-slate-800 rounded-xl px-4 py-2 font-mono text-xs text-slate-300 shadow-xl">
+        <span class="text-brand-400 font-bold">$</span>
+        <span>pip install ampliqc</span>
+        <button onclick="navigator.clipboard.writeText('pip install ampliqc'); alert('Copied to clipboard!');" class="ml-2 text-slate-400 hover:text-white transition">
+          <i class="far fa-copy"></i>
+        </button>
       </div>
 
     </div>
   </section>
 
-  <!-- Institutional Section -->
-  <section id="institution" class="py-12 bg-slate-900/60 border-b border-slate-800/80">
+  <!-- Institutional Spotlight Section: LaBiOmicS & UMC -->
+  <section id="institution" class="py-10 bg-slate-900/40 border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="flex items-center gap-5">
-          <div class="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 text-2xl font-bold shrink-0">
-            <i class="fas fa-flask"></i>
-          </div>
-          <div>
-            <h3 class="text-lg font-bold text-white mb-1">Developed by LaBiOmicS — UMC</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Laboratório de Bioinformática e Ômicas (LaBiOmicS), Universidade Mogi das Cruzes (UMC), SP, Brazil.<br/>
-              Pioneering high-performance, open-science, context-aware computational platforms for genomics and microbiome research.
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 shrink-0">
-          <a href="https://github.com/LaBiOmicS" target="_blank" rel="noopener" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
-            <i class="fab fa-github"></i> LaBiOmicS Org
-          </a>
-          <a href="https://www.umc.br/" target="_blank" rel="noopener" class="px-4 py-2 text-xs font-semibold rounded-lg bg-blue-900/40 hover:bg-blue-900/60 text-blue-300 border border-blue-700/50 transition flex items-center gap-2">
-            <i class="fas fa-university"></i> UMC Official
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- The Problem: FastQC vs ampliQC -->
-  <section id="problem" class="py-16 border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h2 class="text-3xl font-extrabold text-white mb-4">Why Generic QC Tools Fail for Amplicon Libraries</h2>
-        <p class="text-sm text-slate-400">
-          FastQC and Falco evaluate reads against random Whole Genome Sequencing (WGS) assumptions, triggering false-positive warnings for expected biological features of PCR amplicons.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="glass-card p-6 sm:p-8 rounded-2xl border border-brand-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
         
-        <!-- Generic FastQC Card -->
-        <div class="glass-card rounded-2xl p-6 sm:p-8 border-red-500/20 bg-red-950/10">
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-              <span class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 text-lg font-bold">
-                <i class="fas fa-triangle-exclamation"></i>
-              </span>
-              <h3 class="text-xl font-bold text-white">Generic Tools (FastQC / Falco)</h3>
-            </div>
-            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
-              False Warnings
-            </span>
+        <div class="space-y-2 text-left">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-bold uppercase tracking-wider">
+            <i class="fas fa-flask"></i> Institutional Research Spotlight
           </div>
+          <h2 class="text-xl sm:text-2xl font-black text-white">
+            Developed by <span class="text-brand-400">LaBiOmicS</span> — <span class="text-slate-200">Universidade Mogi das Cruzes (UMC)</span>
+          </h2>
+          <p class="text-slate-300 text-xs leading-relaxed max-w-4xl">
+            Engineered at the <strong>Laboratory of Bioinformatics and Omics Sciences (LaBiOmicS / UMC)</strong>, Brazil. Dedicated to building high-performance, open-source bioinformatics software adhering strictly to FAIR (Findable, Accessible, Interoperable, Reusable) data standards.
+          </p>
+        </div>
 
-          <ul class="space-y-4 text-xs text-slate-300">
-            <li class="flex items-start gap-3">
-              <i class="fas fa-xmark text-red-400 mt-0.5 text-sm shrink-0"></i>
-              <div>
-                <strong class="text-red-300 font-semibold block mb-0.5">Sequence Duplication Failure</strong>
-                Flags high duplication (>50%) as library bottleneck or PCR duplication error, ignoring that amplicon target loci inherently produce identical reads.
-              </div>
+        <div class="flex items-center gap-4 text-xs font-mono shrink-0">
+          <a href="https://github.com/LaBiOmicS" target="_blank" class="px-4 py-2 bg-slate-950 hover:bg-slate-900 border border-slate-800 rounded-xl text-blue-400 font-bold transition flex items-center gap-2">
+            <i class="fab fa-github"></i> github.com/LaBiOmicS
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Pipeline Architecture Flowchart -->
+  <section id="pipeline" class="py-12 bg-slate-950 border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-8">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-500/20">How It Works</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">Pipeline Architecture</h2>
+      </div>
+
+      <!-- Flowchart Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="w-6 h-6 rounded-lg bg-brand-500 text-slate-950 font-black text-xs flex items-center justify-center">1</span>
+            <i class="fas fa-file-code text-brand-400"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">1. FASTQ Streaming</h3>
+          <p class="text-slate-400 text-xs leading-normal">Native streaming of FASTQ & FASTQ.GZ files for Short and Long Reads.</p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="w-6 h-6 rounded-lg bg-brand-500 text-slate-950 font-black text-xs flex items-center justify-center">2</span>
+            <i class="fas fa-crosshairs text-brand-400"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">2. Terminal Primer Scanning</h3>
+          <p class="text-slate-400 text-xs leading-normal">Positional 5' & 3' IUPAC regex scanning eliminates internal gene false hits.</p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="w-6 h-6 rounded-lg bg-brand-500 text-slate-950 font-black text-xs flex items-center justify-center">3</span>
+            <i class="fas fa-scale-balanced text-brand-400"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">3. Biological Evaluation</h3>
+          <p class="text-slate-400 text-xs leading-normal">Re-evaluates duplication and base composition in amplicon-locus context.</p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="w-6 h-6 rounded-lg bg-brand-500 text-slate-950 font-black text-xs flex items-center justify-center">4</span>
+            <i class="fas fa-chart-column text-brand-400"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">4. Output Deliverables</h3>
+          <p class="text-slate-400 text-xs leading-normal">Generates HTML, JSON, MultiQC, Cutadapt commands and DADA2 parameters.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Problem Section: FastQC vs ampliQC -->
+  <section id="problem" class="py-12 bg-slate-900/20 border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-8">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-500/20">Comparison</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">FastQC vs ampliQC</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- FastQC card -->
+        <div class="glass-card p-6 rounded-2xl border border-red-500/30 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-red-400 flex items-center gap-2">
+              <i class="fas fa-circle-xmark"></i> Generic FastQC / Falco
+            </h3>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">WGS Assumptions</span>
+          </div>
+          <ul class="text-xs text-slate-300 space-y-2">
+            <li class="flex items-start gap-2">
+              <i class="fas fa-minus text-red-400 mt-0.5 shrink-0"></i>
+              <span><strong>False Duplication Warnings:</strong> Flags high duplication rates (>50%) as errors, ignoring amplicon locus targeting.</span>
             </li>
-            <li class="flex items-start gap-3">
-              <i class="fas fa-xmark text-red-400 mt-0.5 text-sm shrink-0"></i>
-              <div>
-                <strong class="text-red-300 font-semibold block mb-0.5">Per-Base Sequence Content Failure</strong>
-                Flags non-uniform A/C/G/T ratio at read starts, ignoring that reads begin at fixed PCR primer binding sites.
-              </div>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-minus text-red-400 mt-0.5 shrink-0"></i>
+              <span><strong>False Base Composition Failures:</strong> Flags non-uniform A/C/G/T at read starts caused by fixed PCR primers.</span>
             </li>
-            <li class="flex items-start gap-3">
-              <i class="fas fa-xmark text-red-400 mt-0.5 text-sm shrink-0"></i>
-              <div>
-                <strong class="text-red-300 font-semibold block mb-0.5">Blind to PCR Primers & Trimming</strong>
-                Does not detect IUPAC degenerate primers (e.g. 341F / 805R / 515F) or calculate downstream ASV/OTU impact.
-              </div>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-minus text-red-400 mt-0.5 shrink-0"></i>
+              <span><strong>No Trimming Guidance:</strong> Fails to detect degenerate IUPAC primers or generate Cutadapt/DADA2 parameters.</span>
             </li>
           </ul>
         </div>
 
-        <!-- ampliQC Card -->
-        <div class="glass-card rounded-2xl p-6 sm:p-8 border-brand-500/30 bg-brand-950/10">
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-              <span class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 text-lg font-bold">
-                <i class="fas fa-circle-check"></i>
-              </span>
-              <h3 class="text-xl font-bold text-white">ampliQC Engine</h3>
-            </div>
-            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">
-              Context-Aware
-            </span>
+        <!-- ampliQC card -->
+        <div class="glass-card p-6 rounded-2xl border border-brand-500/40 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-brand-400 flex items-center gap-2">
+              <i class="fas fa-circle-check"></i> ampliQC Engine
+            </h3>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-brand-500/10 text-brand-400 border border-brand-500/20">Amplicon-Aware</span>
           </div>
-
-          <ul class="space-y-4 text-xs text-slate-300">
-            <li class="flex items-start gap-3">
-              <i class="fas fa-check text-brand-400 mt-0.5 text-sm shrink-0"></i>
-              <div>
-                <strong class="text-brand-300 font-semibold block mb-0.5">Biological Duplication PASS</strong>
-                Recognizes high locus duplication as an expected biological feature of targeted marker genes (16S, 18S, ITS).
-              </div>
+          <ul class="text-xs text-slate-300 space-y-2">
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check text-brand-400 mt-0.5 shrink-0"></i>
+              <span><strong>Biological Duplication PASS:</strong> Correctly validates expected sequence duplication in 16S/18S/ITS locus amplicons.</span>
             </li>
-            <li class="flex items-start gap-3">
-              <i class="fas fa-check text-brand-400 mt-0.5 text-sm shrink-0"></i>
-              <div>
-                <strong class="text-brand-300 font-semibold block mb-0.5">Positional Terminal Primer Anchoring</strong>
-                Scans 5' and 3' terminal extremities for PCR primers (IUPAC codes) with zero false-positive internal gene body hits.
-              </div>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check text-brand-400 mt-0.5 shrink-0"></i>
+              <span><strong>Positional Terminal Scanning:</strong> Detects 5' and 3' PCR primers with zero internal gene body false positives.</span>
             </li>
-            <li class="flex items-start gap-3">
-              <i class="fas fa-check text-brand-400 mt-0.5 text-sm shrink-0"></i>
-              <div>
-                <strong class="text-brand-300 font-semibold block mb-0.5">Cutadapt & DADA2 Parameter Generator</strong>
-                Generates ready-to-copy Cutadapt CLI commands and optimal DADA2/QIIME 2 truncation lengths (`truncLen`).
-              </div>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check text-brand-400 mt-0.5 shrink-0"></i>
+              <span><strong>Actionable Trimming Commands:</strong> Generates ready-to-copy Cutadapt CLI commands and DADA2 `truncLen` parameters.</span>
             </li>
           </ul>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Architecture / Flow Section -->
-  <section id="architecture" class="py-16 bg-slate-900/40 border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h2 class="text-3xl font-extrabold text-white mb-4">Pipeline Architecture & Execution Flow</h2>
-        <p class="text-sm text-slate-400">
-          From raw FASTQ reads to context-aware biological metrics and MultiQC-ready outputs.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        
-        <!-- Step 1 -->
-        <div class="glass-card rounded-xl p-5 text-center flex flex-col items-center">
-          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-lg font-bold mb-3">
-            1
-          </div>
-          <h4 class="text-sm font-bold text-white mb-1">FASTQ Streaming</h4>
-          <p class="text-xs text-slate-400">Low-memory streaming parser for Short & Long Reads (.fastq.gz).</p>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="glass-card rounded-xl p-5 text-center flex flex-col items-center">
-          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-lg font-bold mb-3">
-            2
-          </div>
-          <h4 class="text-sm font-bold text-white mb-1">Context Auto-Detect</h4>
-          <p class="text-xs text-slate-400">Profiles target region (16S V3-V4, V4, ITS, 18S, ONT, PacBio).</p>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="glass-card rounded-xl p-5 text-center flex flex-col items-center">
-          <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center text-lg font-bold mb-3">
-            3
-          </div>
-          <h4 class="text-sm font-bold text-white mb-1">Terminal Primer Scan</h4>
-          <p class="text-xs text-slate-400">Positional 5' and 3' IUPAC regex scanning and trimming status.</p>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="glass-card rounded-xl p-5 text-center flex flex-col items-center">
-          <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center text-lg font-bold mb-3">
-            4
-          </div>
-          <h4 class="text-sm font-bold text-white mb-1">Biological Evaluation</h4>
-          <p class="text-xs text-slate-400">Re-evaluates duplication, base bias, quality decay & DADA2 parameters.</p>
-        </div>
-
-        <!-- Step 5 -->
-        <div class="glass-card rounded-xl p-5 text-center flex flex-col items-center">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg font-bold mb-3">
-            5
-          </div>
-          <h4 class="text-sm font-bold text-white mb-1">Multi-Format Reports</h4>
-          <p class="text-xs text-slate-400">Generates HTML, JSON, YAML, MultiQC JSON & PNG figures.</p>
         </div>
 
       </div>
@@ -340,82 +294,62 @@
   </section>
 
   <!-- Key Features Grid -->
-  <section id="features" class="py-16 border-b border-slate-800/80">
+  <section id="features" class="py-12 bg-slate-950 border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h2 class="text-3xl font-extrabold text-white mb-4">Key Features & Capabilities</h2>
-        <p class="text-sm text-slate-400">
-          Engineered for bioinformaticians, sequencing core facilities, and microbiome researchers.
-        </p>
+      <div class="text-center mb-8">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-500/20">Capabilities</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">Key Features</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         
-        <!-- Feature 1 -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center text-lg mb-4">
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm font-bold">
             <i class="fas fa-bullseye"></i>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">Multi-Target Biological Engine</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Built-in support for 16S (V1-V3, V3-V4, V4, V9, Full-Length), 18S, ITS, COI, 12S MiFish, rbcL, matK, nifH, and amoA targets.
-          </p>
+          <h3 class="text-sm font-bold text-white">Multi-Target Biological Profiling</h3>
+          <p class="text-slate-400 text-xs leading-normal">Supports 16S (V1-V3, V3-V4, V4, V9, Full-Length), 18S, ITS, COI, 12S MiFish, rbcL, matK, nifH, and amoA.</p>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="w-10 h-10 rounded-xl bg-accent-500/10 border border-accent-500/30 text-accent-400 flex items-center justify-center text-lg mb-4">
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm font-bold">
             <i class="fas fa-scissors"></i>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">Automated Trimming Commands</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Generates exact ready-to-copy Cutadapt and Chopper CLI commands containing detected forward and reverse primers.
-          </p>
+          <h3 class="text-sm font-bold text-white">Cutadapt Command Generator</h3>
+          <p class="text-slate-400 text-xs leading-normal">Produces exact CLI commands for Cutadapt & Chopper containing detected forward and reverse primers.</p>
         </div>
 
-        <!-- Feature 3 -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center text-lg mb-4">
-            <i class="fas fa-vial"></i>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm font-bold">
+            <i class="fas fa-sliders"></i>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">DADA2 / QIIME 2 Optimization</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Calculates exact truncation lengths (`truncLen` R1/R2) based on Phred score decay ensuring sufficient read overlap.
-          </p>
+          <h3 class="text-sm font-bold text-white">DADA2 `truncLen` Calculator</h3>
+          <p class="text-slate-400 text-xs leading-normal">Calculates optimal DADA2 truncation lengths maintaining required read overlap for ASV merging.</p>
         </div>
 
-        <!-- Feature 4 -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg mb-4">
-            <i class="fas fa-bolt"></i>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm font-bold">
+            <i class="fas fa-layer-group"></i>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">Parallel Multi-Sample Engine</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            `ampliqc run-batch` processes entire directories of FASTQ files using multi-core CPU process pools.
-          </p>
+          <h3 class="text-sm font-bold text-white">Parallel Batch Engine</h3>
+          <p class="text-slate-400 text-xs leading-normal">`ampliqc run-batch` processes entire directories of FASTQ files using multi-core process pools.</p>
         </div>
 
-        <!-- Feature 5 -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-lg mb-4">
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm font-bold">
             <i class="fas fa-chart-pie"></i>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">MultiQC & TSV Exports</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Outputs native MultiQC custom data files (`_ampliqc_mqc.json`) and consolidated TSV summary matrices.
-          </p>
+          <h3 class="text-sm font-bold text-white">MultiQC & TSV Exports</h3>
+          <p class="text-slate-400 text-xs leading-normal">Outputs native MultiQC JSON custom data modules (`_ampliqc_mqc.json`) and summary TSV matrices.</p>
         </div>
 
-        <!-- Feature 6 -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center text-lg mb-4">
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm font-bold">
             <i class="fas fa-box"></i>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">Docker & Apptainer HPC Ready</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Includes Dockerfile and Apptainer/Singularity manifests for 100% deterministic workflow execution on HPC clusters.
-          </p>
+          <h3 class="text-sm font-bold text-white">Docker & Apptainer Containers</h3>
+          <p class="text-slate-400 text-xs leading-normal">Includes Dockerfile and Apptainer manifests for reproducible execution in HPC & Cloud environments.</p>
         </div>
 
       </div>
@@ -424,42 +358,36 @@
   </section>
 
   <!-- Installation Section -->
-  <section id="installation" class="py-16 bg-slate-900/40 border-b border-slate-800/80">
+  <section id="installation" class="py-12 bg-slate-900/40 border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h2 class="text-3xl font-extrabold text-white mb-4">Installation</h2>
-        <p class="text-sm text-slate-400">Choose your preferred installation method.</p>
+      <div class="text-center mb-8">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-500/20">Setup</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">Installation</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         
-        <!-- PyPI -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <i class="fab fa-python text-2xl text-brand-400"></i>
-            <h3 class="text-base font-bold text-white">Via PyPI</h3>
-          </div>
-          <pre class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-brand-300 overflow-x-auto"><code>pip install ampliqc</code></pre>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fab fa-python text-brand-400"></i> Via PyPI
+          </h3>
+          <pre class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-mono text-brand-300">pip install ampliqc</pre>
         </div>
 
-        <!-- Bioconda -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <i class="fas fa-cubes text-2xl text-emerald-400"></i>
-            <h3 class="text-base font-bold text-white">Via Bioconda</h3>
-          </div>
-          <pre class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-emerald-300 overflow-x-auto"><code>conda install -c bioconda ampliqc</code></pre>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fas fa-cubes text-emerald-400"></i> Via Bioconda
+          </h3>
+          <pre class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-mono text-emerald-300">conda install -c bioconda ampliqc</pre>
         </div>
 
-        <!-- Source -->
-        <div class="glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <i class="fab fa-github text-2xl text-slate-200"></i>
-            <h3 class="text-base font-bold text-white">From GitHub</h3>
-          </div>
-          <pre class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 overflow-x-auto"><code>git clone https://github.com/LaBiOmicS/ampliQC.git
-cd ampliQC && pip install -e .</code></pre>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fab fa-github text-slate-300"></i> From GitHub
+          </h3>
+          <pre class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">git clone https://github.com/LaBiOmicS/ampliQC.git
+cd ampliQC && pip install -e .</pre>
         </div>
 
       </div>
@@ -467,64 +395,58 @@ cd ampliQC && pip install -e .</code></pre>
     </div>
   </section>
 
-  <!-- Interactive Usage & Code Examples -->
-  <section id="usage" class="py-16 border-b border-slate-800/80">
+  <!-- Usage & Code Examples -->
+  <section id="usage" class="py-12 bg-slate-950 border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-3xl mx-auto mb-10">
-        <h2 class="text-3xl font-extrabold text-white mb-4">Usage & Examples</h2>
-        <p class="text-sm text-slate-400">Explore CLI commands and Python API usage patterns.</p>
+      <div class="text-center mb-6">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-500/20">CLI & API</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">Usage & Examples</h2>
       </div>
 
-      <!-- Code Tabs Navigation -->
+      <!-- Tab Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
         <button onclick="switchTab('tab-short')" id="btn-tab-short" class="tab-btn tab-active px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 transition">
-          <i class="fas fa-dna mr-1.5"></i> Short-Read 16S
+          Short-Read 16S
         </button>
         <button onclick="switchTab('tab-long')" id="btn-tab-long" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-400 hover:text-slate-200 transition">
-          <i class="fas fa-wave-square mr-1.5"></i> Long-Read ONT / PacBio
+          Long-Read ONT / PacBio
         </button>
         <button onclick="switchTab('tab-custom')" id="btn-tab-custom" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-400 hover:text-slate-200 transition">
-          <i class="fas fa-sliders mr-1.5"></i> Custom Primers
+          Custom Primers
         </button>
         <button onclick="switchTab('tab-batch')" id="btn-tab-batch" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-400 hover:text-slate-200 transition">
-          <i class="fas fa-folder-tree mr-1.5"></i> Multi-Sample Batch
+          Multi-Sample Batch
         </button>
         <button onclick="switchTab('tab-python')" id="btn-tab-python" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-400 hover:text-slate-200 transition">
-          <i class="fab fa-python mr-1.5"></i> Python API
+          Python API
         </button>
       </div>
 
-      <!-- Tab Content Area -->
-      <div class="glass-card rounded-2xl p-6 sm:p-8 max-w-4xl mx-auto">
+      <!-- Code Box -->
+      <div class="glass-card p-6 rounded-2xl border border-slate-800 max-w-4xl mx-auto">
         
-        <!-- Tab 1: Short Read -->
         <div id="tab-short" class="tab-content">
-          <h4 class="text-sm font-bold text-white mb-2">Paired-End Illumina 16S V3-V4 Analysis</h4>
-          <p class="text-xs text-slate-400 mb-4">Automatic context detection and Quality Control for short-read amplicon libraries.</p>
-          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-brand-300 overflow-x-auto"><code># Single sample paired-end run with automatic context detection
+          <h4 class="text-xs font-bold uppercase tracking-wider text-brand-400 mb-2">Illumina 16S V3-V4 Analysis</h4>
+          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-brand-300 overflow-x-auto"># Single sample paired-end run with automatic context detection
 ampliqc run -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz --context auto -o qc_output/
 
 # Explicit context profile setting
-ampliqc run -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz --context amplicon_16s -o qc_output/</code></pre>
+ampliqc run -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz --context amplicon_16s -o qc_output/</pre>
         </div>
 
-        <!-- Tab 2: Long Read -->
         <div id="tab-long" class="tab-content hidden">
-          <h4 class="text-sm font-bold text-white mb-2">Full-Length Long-Read Amplicon Analysis</h4>
-          <p class="text-xs text-slate-400 mb-4">Analyze Oxford Nanopore and PacBio HiFi full-length 16S / ITS reads.</p>
-          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-accent-300 overflow-x-auto"><code># Oxford Nanopore Full-Length 16S (~1,500 bp)
+          <h4 class="text-xs font-bold uppercase tracking-wider text-accent-400 mb-2">Full-Length ONT & PacBio HiFi Analysis</h4>
+          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-accent-300 overflow-x-auto"># Oxford Nanopore Full-Length 16S (~1,500 bp)
 ampliqc run -1 sample_ont_16s.fastq.gz --context ont -o qc_output/
 
 # PacBio HiFi Full-Length 16S
-ampliqc run -1 sample_pacbio.fastq.gz --context pacbio_hifi -o qc_output/</code></pre>
+ampliqc run -1 sample_pacbio.fastq.gz --context pacbio_hifi -o qc_output/</pre>
         </div>
 
-        <!-- Tab 3: Custom Primers -->
         <div id="tab-custom" class="tab-content hidden">
-          <h4 class="text-sm font-bold text-white mb-2">Custom IUPAC Primers & Custom Database</h4>
-          <p class="text-xs text-slate-400 mb-4">Specify lab custom primer sequences or load custom YAML databases.</p>
-          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-emerald-300 overflow-x-auto"><code># Specify custom forward & reverse primers directly
+          <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">Custom IUPAC Primers & Database</h4>
+          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-emerald-300 overflow-x-auto"># Specify custom forward & reverse primers directly
 ampliqc run -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz \
   --primer-f GTGYCAGCMGCCGCGGTAA \
   --primer-r GGACTACNVGGGTWTCTAAT \
@@ -533,22 +455,18 @@ ampliqc run -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz \
 # Load custom YAML primer database file
 ampliqc run -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz \
   --primer-db my_lab_primers.yaml \
-  -o qc_output/</code></pre>
+  -o qc_output/</pre>
         </div>
 
-        <!-- Tab 4: Batch -->
         <div id="tab-batch" class="tab-content hidden">
-          <h4 class="text-sm font-bold text-white mb-2">Multi-Sample Parallel Batch Engine</h4>
-          <p class="text-xs text-slate-400 mb-4">Process hundreds of samples in parallel with CPU process pools.</p>
-          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-purple-300 overflow-x-auto"><code># Run multi-sample batch processing across a directory (8 threads)
-ampliqc run-batch -i /path/to/fastq_directory/ -o batch_qc_results/ -t 8</code></pre>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">Parallel Multi-Sample Batch Engine</h4>
+          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-purple-300 overflow-x-auto"># Run multi-sample batch processing across a directory (8 threads)
+ampliqc run-batch -i /path/to/fastq_directory/ -o batch_qc_results/ -t 8</pre>
         </div>
 
-        <!-- Tab 5: Python API -->
         <div id="tab-python" class="tab-content hidden">
-          <h4 class="text-sm font-bold text-white mb-2">Python Programmatic API</h4>
-          <p class="text-xs text-slate-400 mb-4">Integrate ampliQC directly into Python workflows and pipelines.</p>
-          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-indigo-300 overflow-x-auto"><code>from ampliqc.core.parser import read_fastq
+          <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2">Python Programmatic API</h4>
+          <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-indigo-300 overflow-x-auto">from ampliqc.core.parser import read_fastq
 from ampliqc.core.stats import FastqStatsAccumulator
 from ampliqc.context.amplicon import AmpliconContextAnalyzer
 
@@ -565,7 +483,7 @@ analyzer = AmpliconContextAnalyzer(target_region="amplicon_16s")
 eval_results = analyzer.evaluate(stats_summary, sample_sequences=sequences)
 
 print("Target Region:", eval_results["metadata"]["target_region"])
-print("Trimming Status:", eval_results["metadata"]["trimming_status"])</code></pre>
+print("Trimming Status:", eval_results["metadata"]["trimming_status"])</pre>
         </div>
 
       </div>
@@ -574,43 +492,39 @@ print("Trimming Status:", eval_results["metadata"]["trimming_status"])</code></p
   </section>
 
   <!-- Citation Section -->
-  <section id="citation" class="py-16 bg-slate-900/40 border-b border-slate-800/80">
+  <section id="citation" class="py-12 bg-slate-900/40 border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="glass-card rounded-2xl p-6 sm:p-8 max-w-4xl mx-auto">
-        <div class="flex items-center gap-3 mb-4">
-          <i class="fas fa-quote-left text-2xl text-brand-400"></i>
-          <h3 class="text-lg font-bold text-white">How to Cite ampliQC</h3>
-        </div>
-        <p class="text-xs text-slate-400 mb-4 leading-relaxed">
-          If you use <strong>ampliQC</strong> in your scientific research or bioinformatics pipelines, please cite:
-        </p>
-        <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-slate-300 overflow-x-auto"><code>@article{menegidio2026ampliqc,
+      <div class="glass-card p-6 rounded-2xl border border-slate-800 max-w-4xl mx-auto space-y-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fas fa-quote-left text-brand-400"></i> How to Cite ampliQC
+        </h3>
+        <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto">@article{menegidio2026ampliqc,
   title={ampliQC: A Context-Aware Quality Control Engine for Amplicon Sequencing Data},
   author={Menegidio, Fabiano},
   journal={Bioinformatics / GitHub Repository},
   year={2026},
   publisher={LaBiOmicS - Universidade Mogi das Cruzes (UMC)},
   url={https://github.com/LaBiOmicS/ampliQC}
-}</code></pre>
+}</pre>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="py-8 bg-slate-950 border-t border-slate-800 text-center text-xs text-slate-500">
+  <footer class="py-6 bg-slate-950 border-t border-slate-800/80 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
-        © 2026 <strong>LaBiOmicS UMC</strong> — Laboratório de Bioinformática e Ômicas (UMC). Released under MIT License.
+        © 2026 <strong>LaBiOmicS UMC</strong> — Laboratório de Bioinformática e Ômicas (UMC). MIT License.
       </div>
-      <div class="flex items-center space-x-4 text-slate-400">
+      <div class="flex items-center space-x-4 text-slate-400 font-mono">
         <a href="https://github.com/LaBiOmicS/ampliQC" target="_blank" rel="noopener" class="hover:text-brand-400 transition">
-          <i class="fab fa-github text-base"></i> GitHub
+          <i class="fab fa-github"></i> GitHub
         </a>
         <a href="https://pypi.org/project/ampliqc/" target="_blank" rel="noopener" class="hover:text-brand-400 transition">
-          <i class="fab fa-python text-base"></i> PyPI
+          <i class="fab fa-python"></i> PyPI
         </a>
         <a href="https://www.umc.br/" target="_blank" rel="noopener" class="hover:text-brand-400 transition">
-          <i class="fas fa-university text-base"></i> UMC
+          <i class="fas fa-university"></i> UMC
         </a>
       </div>
     </div>
@@ -619,16 +533,12 @@ print("Trimming Status:", eval_results["metadata"]["trimming_status"])</code></p
   <!-- Tab Switcher Script -->
   <script>
     function switchTab(tabId) {
-      // Hide all tabs
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      // Reset all buttons
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('tab-active');
         btn.classList.add('text-slate-400');
       });
-      // Show selected tab
       document.getElementById(tabId).classList.remove('hidden');
-      // Highlight selected button
       const activeBtn = document.getElementById('btn-' + tabId);
       activeBtn.classList.add('tab-active');
       activeBtn.classList.remove('text-slate-400');
