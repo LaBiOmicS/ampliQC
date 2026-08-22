@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Maintainer Fabiano Menegidio <labiomics@bioinformatica.com.br>
+    Version 0.1.0
+    Description Context-aware Amplicon Quality Control Engine (Short & Long Reads)
+
+%post
+    apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        zlib1g-dev \
+        git \
+        && rm -rf /var/lib/apt/lists/*
+    
+    pip install --no-cache-dir ampliqc
+
+%environment
+    export LC_ALL=C
+
+%runscript
+    exec ampliqc "$@"

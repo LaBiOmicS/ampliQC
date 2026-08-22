@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ampliQC Report - {{ sample_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        
+        <!-- Header -->
+        <header class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">ampliQC <span class="text-indigo-600">Report</span></h1>
+                <p class="text-slate-500 text-sm mt-1">Context-Aware Amplicon Quality Control Engine</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm font-semibold text-slate-700">Sample: <span class="text-indigo-600 font-mono">{{ sample_name }}</span></div>
+                <div class="text-xs text-slate-400 mt-1">Context: <span class="bg-indigo-100 text-indigo-800 font-semibold px-2 py-0.5 rounded">{{ context_name }}</span></div>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <section class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Total Reads</div>
+                <div class="text-2xl font-bold text-slate-800 mt-1">{{ "{:,}".format(summary.total_reads) }}</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Mean Length</div>
+                <div class="text-2xl font-bold text-slate-800 mt-1">{{ summary.mean_read_length }} bp</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">GC Content</div>
+                <div class="text-2xl font-bold text-slate-800 mt-1">{{ summary.overall_gc_content }}%</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Duplication Rate</div>
+                <div class="text-2xl font-bold text-slate-800 mt-1">{{ summary.duplication_rate }}%</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Overall Status</div>
+                <div class="text-xl font-bold mt-1">
+                    {% if context_evaluation.overall_status == 'PASS' %}
+                        <span class="text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">PASS</span>
+                    {% elif context_evaluation.overall_status == 'WARN' %}
+                        <span class="text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">WARN</span>
+                    {% else %}
+                        <span class="text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200">FAIL</span>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Metadata & Biological Context Section -->
+        {% if context_evaluation.metadata %}
+        <section class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-xl shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-300">
+                <span>🧬 Metadata & Biological Context Profile</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-800/60 backdrop-blur rounded-lg p-4 border border-slate-700">
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sequencing Technology & Strategy</div>
+                    <div class="text-lg font-bold text-white mt-1">{{ context_evaluation.metadata.sequencing_technology }}</div>
+                    <div class="text-xs text-indigo-300 mt-0.5">{{ context_evaluation.metadata.context_type }}</div>
+                </div>
+                <div class="bg-slate-800/60 backdrop-blur rounded-lg p-4 border border-slate-700">
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Target Region & Amplicon</div>
+                    <div class="text-lg font-bold text-emerald-400 mt-1">{{ context_evaluation.metadata.target_region }}</div>
+                    <div class="text-xs text-slate-300 mt-0.5 font-mono truncate">{{ context_evaluation.metadata.primary_primer }}</div>
+                </div>
+                <div class="bg-slate-800/60 backdrop-blur rounded-lg p-4 border border-slate-700">
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Primer Trimming Status</div>
+                    <div class="mt-1">
+                        {% if 'UNTRIMMED' in context_evaluation.metadata.trimming_status or 'Required' in context_evaluation.metadata.trimming_status %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">⚠️ {{ context_evaluation.metadata.trimming_status }}</span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">✓ {{ context_evaluation.metadata.trimming_status }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="text-xs text-slate-300 mt-2 font-medium">Pipeline: <span class="text-indigo-300 italic">{{ context_evaluation.metadata.recommended_pipeline }}</span></div>
+                </div>
+            </div>
+
+            {% if context_evaluation.metadata.cutadapt_command %}
+            <div class="mt-6 pt-4 border-t border-slate-800">
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">✂️ Ready-to-Copy Trimming Command (Cutadapt / Chopper)</div>
+                <pre class="bg-slate-950 text-amber-300 font-mono text-xs p-3.5 rounded-lg border border-slate-800 overflow-x-auto whitespace-pre-wrap"><code>{{ context_evaluation.metadata.cutadapt_command }}</code></pre>
+            </div>
+            {% endif %}
+
+            {% if context_evaluation.metadata.dada2_recommendation %}
+            <div class="mt-4 pt-2">
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">🧪 DADA2 / ASV Truncation Parameters</div>
+                <div class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 font-mono text-xs p-3 rounded-lg">
+                    {{ context_evaluation.metadata.dada2_recommendation }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if context_evaluation.metadata.detected_primers %}
+            <div class="mt-6 pt-4 border-t border-slate-800">
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Detected Amplicon Primers Details</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono text-slate-300">
+                        <thead class="bg-slate-800 text-slate-400 uppercase font-sans">
+                            <tr>
+                                <th class="py-2 px-3">Primer Name</th>
+                                <th class="py-2 px-3">Sequence (5' -> 3')</th>
+                                <th class="py-2 px-3">Read Matches (Forward / Reverse)</th>
+                                <th class="py-2 px-3">Match Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            {% for primer in context_evaluation.metadata.detected_primers %}
+                            <tr>
+                                <td class="py-2 px-3 font-bold text-white font-sans">{{ primer.primer_name }}</td>
+                                <td class="py-2 px-3 text-indigo-300">{{ primer.sequence }}</td>
+                                <td class="py-2 px-3 font-sans">{{ primer.orientation_str if primer.orientation_str else "Fwd: " ~ primer.fwd_matches ~ " / Rev: " ~ primer.rev_matches }}</td>
+                                <td class="py-2 px-3 font-bold font-sans text-amber-400">{{ primer.match_pct }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        <!-- Context-Aware Evaluation Table -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span>🎯 Context-Aware Biological Evaluations</span>
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="py-3 px-4">Quality Check</th>
+                            <th class="py-3 px-4">Status</th>
+                            <th class="py-3 px-4">Observation</th>
+                            <th class="py-3 px-4">Context Reasoning & Perspective</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for check in context_evaluation.checks %}
+                        <tr>
+                            <td class="py-3.5 px-4 font-semibold text-slate-900">{{ check.name }}</td>
+                            <td class="py-3.5 px-4">
+                                {% if check.status == 'PASS' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">PASS</span>
+                                {% elif check.status == 'WARN' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">WARN</span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">FAIL</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-4 text-slate-700">{{ check.message }}</td>
+                            <td class="py-3.5 px-4 text-slate-500 italic bg-slate-50/50 rounded-lg">{{ check.context_reasoning }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Dynamic Charts Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Per Base Quality -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Per-Base Quality Distribution</h3>
+                <div id="chart-per-base-qual" class="w-full h-80"></div>
+            </div>
+
+            <!-- Per Base Content -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Per-Base Sequence Content</h3>
+                <div id="chart-per-base-content" class="w-full h-80"></div>
+            </div>
+
+            <!-- Read Quality Distribution -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Per-Sequence Mean Quality Score</h3>
+                <div id="chart-seq-qual" class="w-full h-80"></div>
+            </div>
+
+            <!-- GC Content Distribution -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Per-Sequence GC Content Distribution</h3>
+                <div id="chart-gc-dist" class="w-full h-80"></div>
+            </div>
+        </section>
+
+        <!-- Overrepresented Sequences & Primers -->
+        {% if summary.overrepresented_sequences %}
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4">🧬 Overrepresented Sequences & Amplicon Target Loci</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="py-3 px-4">Sequence Snippet</th>
+                            <th class="py-3 px-4">Length</th>
+                            <th class="py-3 px-4">Count</th>
+                            <th class="py-3 px-4">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-mono text-xs">
+                        {% for seq in summary.overrepresented_sequences[:10] %}
+                        <tr>
+                            <td class="py-2.5 px-4 text-indigo-600 truncate max-w-md">{{ seq.sequence }}</td>
+                            <td class="py-2.5 px-4 font-sans text-slate-700">{{ seq.length }} bp</td>
+                            <td class="py-2.5 px-4 font-sans text-slate-700">{{ "{:,}".format(seq.count) }}</td>
+                            <td class="py-2.5 px-4 font-sans font-bold text-slate-800">{{ seq.percentage }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% endif %}
+
+    </div>
+
+    <!-- Plotly JavaScript Renderers -->
+    <script>
+        const positions = Array.from({length: {{ summary.per_base_qual_mean | length }}}, (_, i) => i + 1);
+
+        // 1. Per Base Quality Plot
+        Plotly.newPlot('chart-per-base-qual', [
+            {
+                x: positions,
+                y: {{ summary.per_base_qual_mean }},
+                name: 'Mean Phred',
+                type: 'scatter',
+                mode: 'lines',
+                line: {color: '#2563eb', width: 2.5}
+            },
+            {
+                x: positions,
+                y: {{ summary.per_base_qual_median }},
+                name: 'Median Phred',
+                type: 'scatter',
+                mode: 'lines',
+                line: {color: '#059669', width: 2, dash: 'dot'}
+            }
+        ], {
+            margin: {t: 20, r: 20, l: 40, b: 40},
+            xaxis: {title: 'Position in read (bp)'},
+            yaxis: {title: 'Phred Quality Score', range: [0, 42]},
+            legend: {orientation: 'h', y: 1.15},
+            shapes: [
+                {type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 28, y1: 42, fillcolor: '#e6ffe6', opacity: 0.7, layer: 'below', line: {width: 0}},
+                {type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 20, y1: 28, fillcolor: '#ffffcc', opacity: 0.7, layer: 'below', line: {width: 0}},
+                {type: 'rect', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 0, y1: 20, fillcolor: '#ffe6e6', opacity: 0.7, layer: 'below', line: {width: 0}}
+            ]
+        }, {responsive: true});
+
+        // 2. Per Base Content Plot
+        Plotly.newPlot('chart-per-base-content', [
+            {x: positions, y: {{ summary.per_base_content.A }}, name: '% A', type: 'scatter', mode: 'lines', line: {color: '#ef4444'}},
+            {x: positions, y: {{ summary.per_base_content.C }}, name: '% C', type: 'scatter', mode: 'lines', line: {color: '#3b82f6'}},
+            {x: positions, y: {{ summary.per_base_content.G }}, name: '% G', type: 'scatter', mode: 'lines', line: {color: '#10b981'}},
+            {x: positions, y: {{ summary.per_base_content.T }}, name: '% T', type: 'scatter', mode: 'lines', line: {color: '#f59e0b'}}
+        ], {
+            margin: {t: 20, r: 20, l: 40, b: 40},
+            xaxis: {title: 'Position in read (bp)'},
+            yaxis: {title: 'Nucleotide Content %', range: [0, 100]},
+            legend: {orientation: 'h', y: 1.15}
+        }, {responsive: true});
+
+        // 3. Read Quality Histogram
+        const qualBins = Array.from({length: 61}, (_, i) => i);
+        Plotly.newPlot('chart-seq-qual', [{
+            x: qualBins,
+            y: {{ summary.read_qual_histogram }},
+            type: 'bar',
+            marker: {color: '#6366f1'}
+        }], {
+            margin: {t: 20, r: 20, l: 40, b: 40},
+            xaxis: {title: 'Mean Phred Quality'},
+            yaxis: {title: 'Number of Reads'}
+        }, {responsive: true});
+
+        // 4. GC Content Distribution Histogram
+        const gcBins = Array.from({length: 101}, (_, i) => i);
+        Plotly.newPlot('chart-gc-dist', [{
+            x: gcBins,
+            y: {{ summary.gc_content_histogram }},
+            type: 'bar',
+            marker: {color: '#14b8a6'}
+        }], {
+            margin: {t: 20, r: 20, l: 40, b: 40},
+            xaxis: {title: '% GC Content'},
+            yaxis: {title: 'Number of Reads'}
+        }, {responsive: true});
+    </script>
+</body>
+</html>

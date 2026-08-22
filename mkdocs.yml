@@ -1,0 +1,47 @@
+site_name: ampliQC Documentation
+site_description: Context-aware Quality Control engine for Amplicon sequencing data (Short & Long Reads)
+site_author: Fabiano Menegidio
+site_url: https://labiomics.github.io/ampliQC/
+
+repo_name: LaBiOmicS/ampliQC
+repo_url: https://github.com/LaBiOmicS/ampliQC
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - tables
+
+nav:
+  - Home: index.md
+  - Quick Start: quickstart.md
+  - Usage Guide: usage.md
+  - API Reference: api.md
